@@ -52,7 +52,12 @@ def aceleracion(x):
 
 
 def energia(x, v):
-    """Energia total del oscilador (m = k = 1)."""
+    """Energia total del oscilador.
+
+    E = 1/2 m v^2 + 1/2 k x^2. Como tomamos m = 1 y k = omega^2 (con m = 1),
+    queda E = 1/2 v^2 + 1/2 omega^2 x^2. Si cambiaras m =/= 1 habria que
+    reescribir esta formula con m y k explicitos.
+    """
     return 0.5 * v**2 + 0.5 * OMEGA**2 * x**2
 
 

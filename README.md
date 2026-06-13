@@ -7,14 +7,23 @@ simple. La conclusión visual: **Verlet mantiene la energía acotada para
 siempre; RK4, aunque localmente es más preciso, hace *derivar* la energía de
 forma sistemática a tiempos largos.**
 
+## Contenido del repositorio
+
+| Archivo | Qué es |
+|---|---|
+| `oscilador.py` | Script principal: integradores Verlet y RK4, solución exacta y gráficas. |
+| `verificacion.py` | Tests numéricos que comprueban que la implementación es correcta (no requiere matplotlib). |
+| `energia_verlet_vs_rk4.png` | Figura resultado (se regenera al correr `oscilador.py`). |
+
 ## Cómo correrlo
 
 ```bash
 pip install numpy matplotlib
-python3 oscilador.py
+python3 oscilador.py        # genera la figura y el resumen numérico
+python3 verificacion.py     # corre los chequeos de correctitud
 ```
 
-Genera `energia_verlet_vs_rk4.png` y un resumen numérico por consola.
+`oscilador.py` genera `energia_verlet_vs_rk4.png` y un resumen por consola.
 
 ![resultado](energia_verlet_vs_rk4.png)
 
@@ -115,7 +124,28 @@ pero el área que ocupa nunca cambia.
 
 ---
 
-## 5. Para experimentar en clase
+## 5. Validación numérica
+
+Para tener confianza en que las gráficas reflejan física real y no un bug,
+`verificacion.py` comprueba tres cosas:
+
+| Chequeo | Resultado | Esperado |
+|---|---|---|
+| Orden de convergencia de Verlet | 2.00 | 2 |
+| Orden de convergencia de RK4 | 3.89 → 3.98 | 4 |
+| Reversibilidad temporal de Verlet | `|x − x₀| ≈ 2×10⁻¹⁶` | ~0 (precisión de máquina) |
+| Energía inicial `E(x₀, v₀)` | 0.5 | 0.5 |
+
+- El **orden de convergencia** se mide viendo cómo cae el error global al
+  reducir `dt` a la mitad: para Verlet el error se divide por 4 (orden 2) y
+  para RK4 por 16 (orden 4). Esto confirma que **RK4 es localmente mucho más
+  preciso** que Verlet... y sin embargo es el que termina derivando.
+- La **reversibilidad temporal** (integrar hacia adelante, invertir la
+  velocidad y volver exactamente al punto de partida) es una propiedad
+  característica de los métodos simplécticos, y aquí se cumple a precisión de
+  máquina.
+
+## 6. Para experimentar en clase
 
 - Cambiá `DT`: con pasos más chicos ambos mejoran, pero RK4 **siempre**
   termina derivando si esperás lo suficiente; Verlet **nunca** deriva.
